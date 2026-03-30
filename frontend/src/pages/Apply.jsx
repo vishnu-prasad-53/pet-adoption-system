@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const Apply = () => {
+    const location = useLocation();
+    const petId = location.state || "";
     const [formData, setFormData] = useState({
         name:"",
         email:"",
-        pet_id:""
+        pet_id:petId
     });
 
     const handleChange = (e) => {
@@ -24,10 +27,7 @@ const Apply = () => {
                 },
                 body: JSON.stringify(formData)
             });
-
-            const data = await res.json();
             alert("Application Submitted");
-            setFormData({ name:"", email:"", pet_id:"" });
         } catch (error) {
             console.error(error);
             alert("Error submitting form");
@@ -35,10 +35,10 @@ const Apply = () => {
     }
 
     return (
-        <div>
+        <div className="container">
             <h2>Apply for Adoption</h2>
             <form onSubmit={handleSubmit}>
-                <input 
+                <input
                     type="text"
                     name="name"
                     placeholder="Your Name"
