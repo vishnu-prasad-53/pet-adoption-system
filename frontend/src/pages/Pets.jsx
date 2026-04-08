@@ -17,9 +17,13 @@ const Pets = () => {
       <h2>Available Pets</h2>
       {pets.map(pet => (
         <div className="card" key={pet.id}>
-          <img src={pet.image} alt={pet.name} width="150" />
-          <p>{pet.name} - {pet.breed}</p>
-          <button onClick={() => navigate("/apply", { state: pet.id })}>Adopt</button>
+          <img src={pet.image} alt={pet.name} />
+          <div>
+            <h3>{pet.name}</h3>
+            <p>Breed: {pet.breed}</p>
+            <p>Age: {pet.age}</p>
+            <button onClick={() => navigate("/apply", { state: pet.id })}>Adopt</button>
+          </div>
         </div>
       ))}
     </div>

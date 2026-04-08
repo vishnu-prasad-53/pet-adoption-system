@@ -1,39 +1,83 @@
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    margin: 0;
-    background-color: #f5f5f5;
+  font-family: "Segoe UI", Arial;
+  margin: 0;
+  background: #f4f6f9;
 }
 
+/* Navbar */
 .navbar {
-    background-color: #333;
-    color: #fff;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
+  background: #2c3e50;
+  color: white;
+  padding: 15px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .navbar a {
-    color: #fff;
-    margin: 0 10px;
-    text-decoration: none;
+  color: white;
+  margin-left: 15px;
+  text-decoration: none;
+  font-weight: 500;
 }
 
+.navbar a:hover {
+  color: #1abc9c;
+}
+
+/* Container */
 .container {
-    padding: 20px;
+  padding: 20px 40px;
 }
 
+/* Cards */
 .card {
-    background-color: #fff;
-    padding: 15px;
-    margin: 10px 0;
-    border-radius: 8px;
+  background: white;
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
+/* Images */
+.card img {
+  border-radius: 10px;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+}
+
+/* Buttons */
 button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    border-radius: 5px;
+  background: #1abc9c;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #16a085;
+}
+
+/* Form */
+form {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }

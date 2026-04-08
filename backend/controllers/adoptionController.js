@@ -11,3 +11,11 @@ export const applyAdoption = (req, res) => {
         res.json({ message: "Application Submitted" });
     });
 }
+
+export const approveAdoption = (req, res) => {
+    const { id } = req.params;
+
+    db.query("UPDATE adoptions SET status='approved' WHERE id=?", [id], () => {
+        res.json({ message: "Approved" });
+    });
+}

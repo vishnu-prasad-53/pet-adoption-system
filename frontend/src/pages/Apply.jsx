@@ -5,9 +5,9 @@ const Apply = () => {
     const location = useLocation();
     const petId = location.state || "";
     const [formData, setFormData] = useState({
-        name:"",
-        email:"",
-        pet_id:petId
+        name: "",
+        email: "",
+        pet_id: petId
     });
 
     const handleChange = (e) => {
@@ -23,7 +23,7 @@ const Apply = () => {
             const res = await fetch("http://localhost:5000/api/adoptions", {
                 method: "POST",
                 headers: {
-                    "Content-Type":"application/json"
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify(formData)
             });
@@ -38,34 +38,24 @@ const Apply = () => {
         <div className="container">
             <h2>Apply for Adoption</h2>
             <form onSubmit={handleSubmit}>
+                <label>Name</label>
                 <input
-                    type="text"
-                    name="name"
-                    placeholder="Your Name"
-                    value={formData.name}
-                    onChange={handleChange}
                     required
+                    onChange={e => setFormData({ ...formData, name: e.target.value })}
                 />
-                <br /><br />
-                <input 
-                    type="email"
-                    name="email"
-                    placeholder="Your Email"
-                    value={formData.email}
-                    onChange={handleChange}
+
+                <label>Email</label>
+                <input
                     required
+                    onChange={e => setFormData({ ...formData, email: e.target.value })}
                 />
+
+                <label>Pet ID</label>
+                <input value={formData.pet_id} readOnly />
+
                 <br /><br />
-                <input 
-                    type="number"
-                    name="pet_id"
-                    placeholder="Pet ID"
-                    value={formData.pet_id}
-                    onChange={handleChange}
-                    required
-                />
-                <br /><br />
-                <button type="submit">Apply</button>
+
+                <button type="submit">Submit Application</button>
             </form>
         </div>
     )
