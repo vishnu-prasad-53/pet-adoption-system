@@ -17,6 +17,16 @@ const Login = () => {
         alert(result.message);
     }
 
+    loginUser(formData).then(data => {
+        localStorage.setItem("user", JSON.stringify(data));
+        navigate("/");
+    });
+
+    if (!formData.email || !formData.password) {
+        alert("Please fill all fields");
+        return;
+    }
+
     return (
         <div className="container">
             <h2>Login</h2>

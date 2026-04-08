@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 const Apply = () => {
@@ -10,13 +10,15 @@ const Apply = () => {
         pet_id: petId
     });
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
-    }
-
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem("user"));
+        
+        if (!user) {
+            alert("Please login first");
+            navigate("/login");
+        }
+    }, []);
+        
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {

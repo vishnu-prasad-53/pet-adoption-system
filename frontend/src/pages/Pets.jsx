@@ -8,14 +8,17 @@ const Pets = () => {
 
   useEffect(() => {
     fetchPets()
-    .then(res => res.json())
-    .then(data => setPets(data));
+      .then(data => setPets(data));
   }, []);
 
   return (
     <div className="container">
       <h2>Available Pets</h2>
-      {pets.map(pet => (
+      {pets.length === 0 ? (
+        <p style={{ textAlign: "center", marginTop: "20px" }}>
+          No pets available right now 🐾
+        </p>
+      ) : (pets.map(pet => (
         <div className="card" key={pet.id}>
           <img src={pet.image} alt={pet.name} />
           <div>
@@ -25,7 +28,7 @@ const Pets = () => {
             <button onClick={() => navigate("/apply", { state: pet.id })}>Adopt</button>
           </div>
         </div>
-      ))}
+      )))}
     </div>
   );
 };

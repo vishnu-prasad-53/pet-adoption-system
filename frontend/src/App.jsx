@@ -8,7 +8,7 @@ function App() {
   return (
     <BrowserRouter>
       <nav className="navbar">
-        <h2>Pet Adoption System 🐾</h2>
+        <h2>Pet Adoption System</h2>
         <div>
           <Link to="/">Pets</Link>
           <Link to="/apply">Apply</Link>

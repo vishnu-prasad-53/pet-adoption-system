@@ -5,7 +5,21 @@ const Register = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        alert("Registered Successfully");
+        if (!formData.name || !formData.email || !formData.password) {
+            alert("All fields are required");
+            return;
+        }
+
+        if (formData.password.length < 6) {
+            alert("Password must be at least 6 characters");
+            return;
+        }
+
+        registerUser(formData).then(() => {
+            alert("Registered successfully");
+            navigate("/login");
+        });
+
     }
 
     return (
