@@ -1,43 +1,41 @@
 import { useState } from "react";
+import { registerUser } from "../services/api";
+import { useNavigate } from "react-router-dom";
 
-const Register = () => {
-    const [data, setData] = useState({ name: "", email: "", password: "" });
+export default function Register() {
+  const [form, setForm] = useState({});
+  const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (!formData.name || !formData.email || !formData.password) {
-            alert("All fields are required");
-            return;
-        }
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-        if (formData.password.length < 6) {
-            alert("Password must be at least 6 characters");
-            return;
-        }
-
-        registerUser(formData).then(() => {
-            alert("Registered successfully");
-            navigate("/login");
-        });
-
+    if (!form.name || !form.email || !form.password) {
+      return alert("All fields required");
     }
 
-    return (
-        <div className="container">
-            <h2>Register</h2>
-            <div className="container">
-                <form onSubmit={handleSubmit}>
-                    <input placeholder="Name" onChange={e => setData({ ...data, name: e.target.value })} />
-                    <br /><br />
-                    <input placeholder="Email" onChange={e => setData({ ...data, email: e.target.value })} />
-                    <br /><br />
-                    <input type="password" placeholder="Password" onChange={e => setData({ ...data, password: e.target.value })} />
-                    <br /><br />
-                    <button>Register</button>
-                </form>
-            </div>
-        </div>
-    )
-}
+    if (form.password.length < 6) {
+      return alert("Password must be at least 6 characters");
+    }
 
-export default Register;
+    registerUser(form).then((res) => {
+      alert(res.message);
+      navigate("/login");
+    });
+  };
+
+  return (
+    <div className="container">
+      <h2>Register</h2>
+
+      <form onSubmit={handleSubmit}>
+        <input placeholder="Name" onChange={e => setForm({...form, name: e.target.value})} />
+        <br /><br />
+        <input placeholder="Email" onChange={e => setForm({...form, email: e.target.value})} />
+        <br /><br />
+        <input type="password" placeholder="Password" onChange={e => setForm({...form, password: e.target.value})} />
+        <br /><br />
+        <button type="submit">Register</button>
+      </form>
+    </div>
+  );
+}

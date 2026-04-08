@@ -1,46 +1,39 @@
 import { useState } from "react";
+import { loginUser } from "../services/api";
+import { useNavigate } from "react-router-dom";
 
-const Login = () => {
-    const [data, setData] = useState({ email: "", password: "" });
+export default function Login() {
+  const [form, setForm] = useState({});
+  const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-        const res = await fetch("http://localhost:5000/api/users/login",
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            });
-
-        const result = await res.json();
-        alert(result.message);
+    if (!form.email || !form.password) {
+      return alert("All fields required");
     }
 
-    loginUser(formData).then(data => {
-        localStorage.setItem("user", JSON.stringify(data));
-        navigate("/");
+    loginUser(form).then((res) => {
+      if (res.message) return alert(res.message);
+
+      localStorage.setItem("user", JSON.stringify(res));
+
+      alert("Login successful");
+      navigate("/");
     });
+  };
 
-    if (!formData.email || !formData.password) {
-        alert("Please fill all fields");
-        return;
-    }
+  return (
+    <div className="container">
+      <h2>Login</h2>
 
-    return (
-        <div className="container">
-            <h2>Login</h2>
-            <div className="container">
-                <form onSubmit={handleSubmit}>
-                    <input placeholder="Email" onChange={e => setData({ ...data, email: e.target.value })} />
-                    <br /><br />
-                    <input type="password" placeholder="Password" onChange={e => setData({ ...data, password: e.target.value })} />
-                    <br /><br />
-                    <button>Login</button>
-                </form>
-            </div>
-        </div>
-    )
+      <form onSubmit={handleSubmit}>
+        <input placeholder="Email" onChange={e => setForm({...form, email: e.target.value})} />
+        <br /><br />
+        <input type="password" placeholder="Password" onChange={e => setForm({...form, password: e.target.value})} />
+        <br /><br />
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  );
 }
-
-export default Login;
