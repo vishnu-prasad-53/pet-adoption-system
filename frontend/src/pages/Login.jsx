@@ -14,19 +14,19 @@ export default function Login() {
     }
 
     loginUser(form).then((res) => {
-      if (res.message) return alert(res.message);
-
-      localStorage.setItem("user", JSON.stringify(res));
-
-      alert("Login successful");
-      navigate("/");
+      if (res.id) {
+        localStorage.setItem("user", JSON.stringify(res));
+        alert("Login successful");
+        navigate("/");
+      } else {
+        alert(res.message || "Login failed");
+      }
     });
   };
 
   return (
     <div className="container">
       <h2>Login</h2>
-
       <form onSubmit={handleSubmit}>
         <input placeholder="Email" onChange={e => setForm({...form, email: e.target.value})} />
         <br /><br />

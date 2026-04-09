@@ -1,4 +1,5 @@
 import express from "express";
+import bcrypt from "bcrypt";
 import db from "../config/db.js";
 
 const router = express.Router();
@@ -20,9 +21,11 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "Email already exists" });
     }
 
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     await db.query(
       "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
-      [name, email, password]
+      [name, email, hashedPassword]
     );
 
     res.json({ message: "Registered successfully" });
@@ -52,14 +55,15 @@ router.post("/login", async (req, res) => {
 
     const user = users[0];
 
-    if (user.password !== password) {
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
     res.json({
       id: user.id,
       name: user.name,
-      email: user.email
+      email: user.email,
     });
 
   } catch (err) {
