@@ -14,13 +14,14 @@ export default function Login() {
     }
 
     loginUser(form).then((res) => {
-      if (res.id) {
-        localStorage.setItem("user", JSON.stringify(res));
-        alert("Login successful");
-        navigate("/");
-      } else {
-        alert(res.message || "Login failed");
+      if (res.message !== "Login successful") {
+        return alert(res.message);
       }
+
+      localStorage.setItem("user", JSON.stringify(res.user));
+
+      alert("Login successful");
+      navigate("/");
     });
   };
 
@@ -28,9 +29,9 @@ export default function Login() {
     <div className="container">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
-        <input placeholder="Email" onChange={e => setForm({...form, email: e.target.value})} />
+        <input placeholder="Email" onChange={e => setForm({ ...form, email: e.target.value })} />
         <br /><br />
-        <input type="password" placeholder="Password" onChange={e => setForm({...form, password: e.target.value})} />
+        <input type="password" placeholder="Password" onChange={e => setForm({ ...form, password: e.target.value })} />
         <br /><br />
         <button type="submit">Login</button>
       </form>
