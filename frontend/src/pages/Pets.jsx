@@ -19,8 +19,8 @@ const Pets = () => {
           No pets available right now 🐾
         </p>
       ) : (pets.map(pet => (
-        <div className="card" key={pet.id}>
-          <img src={pet.image} alt={pet.name} />
+        <div className="card" key={pet.pet_id}>
+          <img src={pet.image || "https://via.placeholder.com/120"} alt={pet.name} />
           <div>
             <h3>{pet.name}</h3>
             <p>Breed: {pet.breed}</p>

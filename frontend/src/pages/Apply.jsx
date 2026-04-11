@@ -15,9 +15,16 @@ export default function Apply() {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
+
     if (!user) {
-      alert("Please login first");
+      alert("Please login");
       navigate("/login");
+    } else {
+      setForm({
+        name: user.name,
+        email: user.email,
+        pet_id: petId
+      });
     }
   }, []);
 
@@ -32,8 +39,8 @@ export default function Apply() {
     <div className="container">
       <h2>Apply for Adoption</h2>
       <form onSubmit={handleSubmit}>
-        <input placeholder="Name" onChange={e => setForm({...form, name: e.target.value})} />
-        <input placeholder="Email" onChange={e => setForm({...form, email: e.target.value})} />
+        <input placeholder="Name" onChange={e => setForm({ ...form, name: e.target.value })} />
+        <input placeholder="Email" onChange={e => setForm({ ...form, email: e.target.value })} />
         <input value={form.pet_id} readOnly />
         <br /><br />
         <button type="submit">Submit</button>

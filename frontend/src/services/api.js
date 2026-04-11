@@ -16,6 +16,22 @@ export const createPet = async (petData) => {
   return res.json();
 }
 
+export const deletePet = async (id) => {
+  const res = await fetch(`${API_URL}/pets/${id}`, {
+    method: "DELETE",
+  });
+  return res.json();
+};
+
+export const updatePet = async (id, data) => {
+  const res = await fetch(`${API_URL}/pets/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return res.json();
+};
+
 export const registerUser = async (data) => {
   const res = await fetch(`${API_URL}/auth/register`, {
     method: "POST",
@@ -42,3 +58,17 @@ export const applyAdoption = async (data) => {
   });
   return res.json();
 }
+
+export const fetchAdoptions = async () => {
+  const res = await fetch(`${API_URL}/adoptions`);
+  return res.json();
+};
+
+export const updateAdoption = async (id, status) => {
+  const res = await fetch(`${API_URL}/adoptions/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status }),
+  });
+  return res.json();
+};
