@@ -9,6 +9,7 @@ import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
 import ManagePets from "./pages/ManagePets";
 import AdoptionRequests from "./pages/AdoptionRequests";
+import MyApplications from "./pages/MyApplications";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/admin/manage" element={<ManagePets />} />
         <Route path="/admin/adoptions" element={<AdoptionRequests />} />
+        <Route path="/my-applications" element={<MyApplications />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>

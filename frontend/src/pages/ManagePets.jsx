@@ -10,6 +10,7 @@ export default function ManagePets() {
     image: ""
   });
   const [editId, setEditId] = useState(null);
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
     loadPets();
@@ -23,16 +24,24 @@ export default function ManagePets() {
     e.preventDefault();
     const user = JSON.parse(localStorage.getItem("user"));
 
+    const formData = new FormData();
+    formData.append("name", form.name);
+    formData.append("breed", form.breed);
+    formData.append("age", form.age);
+    formData.append("image", image);
+    formData.append("role", user.role);
+
     if (editId) {
-      await updatePet(editId, { ...form, role: user.role });
+      await updatePet(editId, formData);
       alert("Updated!");
       setEditId(null);
     } else {
-      await createPet({ ...form, role: user.role });
+      await createPet(formData);
       alert("Added!");
     }
 
-    setForm({ name: "", breed: "", age: "", image: "" });
+    setForm({ name: "", breed: "", age: "" });
+    setImage(null);
     loadPets();
   };
 
@@ -69,8 +78,7 @@ export default function ManagePets() {
           onChange={e => setForm({ ...form, age: e.target.value })} />
         <br /><br />
 
-        <input placeholder="Image URL" value={form.image}
-          onChange={e => setForm({ ...form, image: e.target.value })} />
+        <input type="file" onChange={(e) => setImage(e.target.files[0])} />
         <br /><br />
 
         <button>{editId ? "Update Pet" : "Add Pet"}</button>
@@ -80,8 +88,7 @@ export default function ManagePets() {
 
       {pets.map(p => (
         <div key={p.id} className="card">
-          <img src={p.image} alt={p.name} />
-
+          <img src={`http://localhost:5000/uploads/${p.image}`} alt={p.name} />
           <div>
             <h4>{p.name}</h4>
             <p>{p.breed}</p>

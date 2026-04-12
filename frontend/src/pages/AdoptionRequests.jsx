@@ -24,7 +24,7 @@ export default function AdoptionRequests() {
 
       {requests.map(r => (
         <div key={r.id} className="card">
-          <img src={r.image} alt="pet" />
+          <img src={`http://localhost:5000/uploads/${r.image}`} />
 
           <div>
             <h4>{r.pet_name}</h4>

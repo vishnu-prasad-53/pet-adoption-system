@@ -42,12 +42,36 @@ export const updateAdoptionStatus = async (req, res) => {
 
   try {
     await db.query(
-      "UPDATE adoptions SET status = ? WHERE id = ?",
+      "UPDATE adoptions SET status = ? WHERE adoption_id = ?",
       [status, id]
     );
 
     res.json({ message: `Application ${status}` });
   } catch (err) {
     res.status(500).json(err);
+  }
+};
+
+export const getUserAdoptions = async (req, res) => {
+  const { email } = req.params;
+
+  try {
+    const [data] = await db.query(`
+      SELECT 
+        a.adoption_id AS id,
+        a.name,
+        a.email,
+        a.status,
+        p.name AS pet_name,
+        p.image
+      FROM adoptions a
+      JOIN pets p ON a.pet_id = p.pet_id
+      WHERE a.email = ?
+    `, [email]);
+
+    res.json(data);
+  } catch (err) {
+    console.error("User adoption fetch error:", err);
+    res.status(500).json({ error: err.message });
   }
 };

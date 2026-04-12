@@ -23,6 +23,10 @@ export default function Navbar() {
           </>
         )}
 
+        {user && user.role !== "admin" && (
+          <Link to="/my-applications">My Applications</Link>
+        )}
+
         {user ? (
           <>
             <span style={{ marginLeft: "10px" }}>

@@ -10,7 +10,8 @@ export const getPets = async (req, res) => {
 };
 
 export const addPet = async (req, res) => {
-  const { name, age, breed, image, role } = req.body;
+  const { name, age, breed, role } = req.body;
+  const image = req.file ? req.file.filename : null;
 
   if (role !== "admin") {
     return res.status(403).json({ message: "Access denied" });

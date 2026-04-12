@@ -20,7 +20,7 @@ const Pets = () => {
         </p>
       ) : (pets.map(pet => (
         <div className="card" key={pet.pet_id}>
-          <img src={pet.image || "https://via.placeholder.com/120"} alt={pet.name} />
+          <img src={`http://localhost:5000/uploads/${pet.image}`} alt={pet.name} />
           <div>
             <h3>{pet.name}</h3>
             <p>Breed: {pet.breed}</p>

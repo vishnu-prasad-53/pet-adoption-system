@@ -8,10 +8,7 @@ export const fetchPets = async () => {
 export const createPet = async (petData) => {
   const res = await fetch(`${API_URL}/pets`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(petData),
+    body: petData,
   });
   return res.json();
 }
@@ -70,5 +67,10 @@ export const updateAdoption = async (id, status) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ status }),
   });
+  return res.json();
+};
+
+export const fetchUserAdoptions = async (email) => {
+  const res = await fetch(`${API_URL}/adoptions/user/${email}`);
   return res.json();
 };

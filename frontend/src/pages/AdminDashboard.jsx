@@ -56,7 +56,7 @@ export default function AdminDashboard() {
 
       {filteredPets.map(p => (
         <div key={p.id} className="card">
-          <img src={p.image} alt={p.name} />
+          <img src={`http://localhost:5000/uploads/${p.image}`} alt={p.name} />
           <div>
             <h3>{p.name}</h3>
             <p>Breed: {p.breed}</p>
