@@ -62,27 +62,28 @@ export default function ManagePets() {
 
   return (
     <div className="container">
-      <h2>Manage Pets 🛠️</h2>
+      <div className="manage-container">
+        <h2>Manage Pets 🛠️</h2>
 
-      {/* FORM */}
-      <form onSubmit={handleSubmit}>
-        <input placeholder="Name" value={form.name}
-          onChange={e => setForm({ ...form, name: e.target.value })} />
-        <br /><br />
+        <form className="manage-form" onSubmit={handleSubmit}>
+          <input placeholder="Name" value={form.name}
+            onChange={e => setForm({ ...form, name: e.target.value })} />
+          <br /><br />
 
-        <input placeholder="Breed" value={form.breed}
-          onChange={e => setForm({ ...form, breed: e.target.value })} />
-        <br /><br />
+          <input placeholder="Breed" value={form.breed}
+            onChange={e => setForm({ ...form, breed: e.target.value })} />
+          <br /><br />
 
-        <input placeholder="Age" value={form.age}
-          onChange={e => setForm({ ...form, age: e.target.value })} />
-        <br /><br />
+          <input placeholder="Age" value={form.age}
+            onChange={e => setForm({ ...form, age: e.target.value })} />
+          <br /><br />
 
-        <input type="file" onChange={(e) => setImage(e.target.files[0])} />
-        <br /><br />
+          <input type="file" onChange={(e) => setImage(e.target.files[0])} />
+          <br /><br />
 
-        <button>{editId ? "Update Pet" : "Add Pet"}</button>
-      </form>
+          <button>{editId ? "Update Pet" : "Add Pet"}</button>
+        </form>
+      </div>
 
       <h3>All Pets</h3>
 

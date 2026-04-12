@@ -26,15 +26,29 @@ export default function Login() {
   };
 
   return (
-    <div className="container">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <input placeholder="Email" onChange={e => setForm({ ...form, email: e.target.value })} />
-        <br /><br />
-        <input type="password" placeholder="Password" onChange={e => setForm({ ...form, password: e.target.value })} />
-        <br /><br />
-        <button type="submit">Login</button>
-      </form>
+    <div className="auth-container">
+      <div className="auth-card">
+        <h2>Login</h2>
+
+        <form onSubmit={handleSubmit}>
+          <input
+            placeholder="Email"
+            onChange={e => setForm({ ...form, email: e.target.value })}
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            onChange={e => setForm({ ...form, password: e.target.value })}
+          />
+
+          <button type="submit">Login</button>
+        </form>
+
+        <div className="auth-link">
+          Don’t have an account? <a href="/register">Register</a>
+        </div>
+      </div>
     </div>
   );
 }
