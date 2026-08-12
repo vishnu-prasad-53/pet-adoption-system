@@ -17,6 +17,13 @@ export const auth = betterAuth({
         fields: {
             image: "avatarUrl",
         },
+        additionalFields: {
+            role: {
+                type: "string",
+                input: false,
+                defaultValue: "adopter",
+            },
+        },
     },
     secret: ENV.BETTER_AUTH_SECRET,
     baseURL: ENV.BETTER_AUTH_URL,
