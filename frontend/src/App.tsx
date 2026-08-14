@@ -1,7 +1,12 @@
-import Signup from "./pages/Signup";
+import { Outlet } from "react-router";
+import { AppShell } from "./components/layout/AppShell";
 
 function App() {
-  return <Signup />;
+  return (
+    <AppShell>
+      <Outlet />
+    </AppShell>
+  );
 }
 
 export default App;

@@ -7,6 +7,9 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Field, FieldLabel, FieldError } from "../components/ui/field";
+import { useNavigate } from "react-router";
+
+const navigate = useNavigate();
 
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -28,9 +31,9 @@ export default function Login() {
     await authClient.signIn.email(values, {
       onRequest: () => setIsSubmitting(true),
       onSuccess: () => {
-        setIsSubmitting(false);
-        window.location.href = "/";
-      },
+  setIsSubmitting(false);
+  navigate("/");
+},
       onError: (ctx) => {
         setIsSubmitting(false);
         setServerError(ctx.error.message);
