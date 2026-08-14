@@ -7,6 +7,9 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Field, FieldLabel, FieldError } from "../components/ui/field";
+import { useNavigate } from "react-router";
+
+const navigate = useNavigate();
 
 const signupSchema = z.object({
   name: z.string().min(2, "Name is too short"),
@@ -28,9 +31,9 @@ export default function Signup() {
     await authClient.signUp.email(values, {
       onRequest: () => setIsSubmitting(true),
       onSuccess: () => {
-        setIsSubmitting(false);
-        window.location.href = "/";
-      },
+  setIsSubmitting(false);
+  navigate("/");
+},
       onError: (ctx) => {
         setIsSubmitting(false);
         setServerError(ctx.error.message);
