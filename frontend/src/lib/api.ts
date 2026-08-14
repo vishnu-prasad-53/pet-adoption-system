@@ -1,7 +1,7 @@
 const API_URL = "http://localhost:3000";
 
-export async function apiRequest(endpoint: string, options: RequestInit = {}) {
-    const response = await fetch(`${API_URL}${endpoint}`, {
+export async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
+    const response = await fetch(`${API_URL}${path}`, {
         ...options,
         credentials: "include",
         headers: {

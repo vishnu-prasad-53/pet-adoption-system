@@ -1,67 +1,73 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { apiRequest } from "../lib/api";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { authClient } from "../lib/auth-client";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { Field, FieldLabel, FieldError } from "../components/ui/field";
 
-type LoginForm = {
-  email: string;
-  password: string;
-};
+const loginSchema = z.object({
+  email: z.string().email("Enter a valid email"),
+  password: z.string().min(1, "Password is required"),
+});
+type LoginForm = z.infer<typeof loginSchema>;
 
 export default function Login() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginForm>();
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Destructure register, handleSubmit, and errors directly
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({ 
+    resolver: zodResolver(loginSchema) 
+  });
 
-  const onSubmit = async (data: LoginForm) => {
-    try {
-      const result = await apiRequest("/api/auth/sign-in/email", {
-        method: "POST",
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-        }),
-      });
-
-      console.log("Login successful:", result);
-      alert("Login successful!");
-    } catch (error) {
-      console.error(error);
-      alert(error instanceof Error ? error.message : "Login failed");
-    }
+  const onSubmit = async (values: LoginForm) => {
+    setServerError(null);
+    await authClient.signIn.email(values, {
+      onRequest: () => setIsSubmitting(true),
+      onSuccess: () => {
+        setIsSubmitting(false);
+        window.location.href = "/";
+      },
+      onError: (ctx) => {
+        setIsSubmitting(false);
+        setServerError(ctx.error.message);
+      },
+    });
   };
 
   return (
-    <div>
-      <h1>Login</h1>
+    <div className="flex min-h-screen items-center justify-center p-4">
+      <Card className="w-full max-w-sm">
+        <CardHeader><CardTitle>Log in</CardTitle></CardHeader>
+        <CardContent>
+          {/* Native HTML form element with standard handleSubmit handler */}
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            
+            {/* Email Field */}
+            <Field data-invalid={!!errors.email}>
+              <FieldLabel>Email</FieldLabel>
+              <Input type="email" aria-invalid={!!errors.email} {...register("email")} />
+              {errors.email && <FieldError>{errors.email.message}</FieldError>}
+            </Field>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label>Email</label>
-          <input
-            type="email"
-            {...register("email", {
-              required: "Email is required",
-            })}
-          />
-          {errors.email && <p>{errors.email.message}</p>}
-        </div>
+            {/* Password Field */}
+            <Field data-invalid={!!errors.password}>
+              <FieldLabel>Password</FieldLabel>
+              <Input type="password" aria-invalid={!!errors.password} {...register("password")} />
+              {errors.password && <FieldError>{errors.password.message}</FieldError>}
+            </Field>
 
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            {...register("password", {
-              required: "Password is required",
-            })}
-          />
-          {errors.password && <p>{errors.password.message}</p>}
-        </div>
-
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Logging in..." : "Login"}
-        </button>
-      </form>
+            {serverError && <p className="text-sm text-red-500">{serverError}</p>}
+            
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? "Logging in..." : "Log in"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

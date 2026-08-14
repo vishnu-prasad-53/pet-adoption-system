@@ -1,79 +1,79 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { apiRequest } from "../lib/api";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { authClient } from "../lib/auth-client";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { Field, FieldLabel, FieldError } from "../components/ui/field";
 
-type SignupForm = {
-    name: string;
-    email: string;
-    password: string;
-};
+const signupSchema = z.object({
+  name: z.string().min(2, "Name is too short"),
+  email: z.string().email("Enter a valid email"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+});
+type SignupForm = z.infer<typeof signupSchema>;
 
 export default function Signup() {
-    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<SignupForm>();
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const { register, handleSubmit, formState: { errors } } = useForm<SignupForm>({ 
+    resolver: zodResolver(signupSchema) 
+  });
 
-    const onSubmit = async (data: SignupForm) => {
-        try {
-            const result = await apiRequest("/api/auth/sign-up/email", {
-                method: "POST",
-                body: JSON.stringify({
-                    name: data.name,
-                    email: data.email,
-                    password: data.password,
-                }),
-            });
+  const onSubmit = async (values: SignupForm) => {
+    setServerError(null);
+    await authClient.signUp.email(values, {
+      onRequest: () => setIsSubmitting(true),
+      onSuccess: () => {
+        setIsSubmitting(false);
+        window.location.href = "/";
+      },
+      onError: (ctx) => {
+        setIsSubmitting(false);
+        setServerError(ctx.error.message);
+      },
+    });
+  };
 
-            console.log("Signup successful:", result);
-            alert("Account created successfully!");
-        } catch (error) {
-            console.error(error);
-            alert(error instanceof Error ? error.message : "Signup failed");
-        }
-    };
+  return (
+    <div className="flex min-h-screen items-center justify-center p-4">
+      <Card className="w-full max-w-sm">
+        <CardHeader><CardTitle>Create an account</CardTitle></CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            
+            {/* Name Field */}
+            <Field data-invalid={!!errors.name}>
+              <FieldLabel>Name</FieldLabel>
+              <Input aria-invalid={!!errors.name} {...register("name")} />
+              {errors.name && <FieldError>{errors.name.message}</FieldError>}
+            </Field>
 
-    return (
-        <div>
-            <h1>Create Account</h1>
+            {/* Email Field */}
+            <Field data-invalid={!!errors.email}>
+              <FieldLabel>Email</FieldLabel>
+              <Input type="email" aria-invalid={!!errors.email} {...register("email")} />
+              {errors.email && <FieldError>{errors.email.message}</FieldError>}
+            </Field>
 
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div>
-                    <label>Name</label>
-                    <input
-                        {...register("name", {
-                            required: "Name is required",
-                        })}
-                    />
-                    {errors.name && <p>{errors.name.message}</p>}
-                </div>
+            {/* Password Field */}
+            <Field data-invalid={!!errors.password}>
+              <FieldLabel>Password</FieldLabel>
+              <Input type="password" aria-invalid={!!errors.password} {...register("password")} />
+              {errors.password && <FieldError>{errors.password.message}</FieldError>}
+            </Field>
 
-                <div>
-                    <label>Email</label>
-                    <input
-                        type="email"
-                        {...register("email", {
-                            required: "Email is required",
-                        })}
-                    />
-                    {errors.email && <p>{errors.email.message}</p>}
-                </div>
-
-                <div>
-                    <label>Password</label>
-                    <input
-                        type="password"
-                        {...register("password", {
-                            required: "Password is required",
-                            minLength: {
-                                value: 8,
-                                message: "Password must be at least 8 characters",
-                            },
-                        })}
-                    />
-                    {errors.password && <p>{errors.password.message}</p>}
-                </div>
-
-                <button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? "Creating Account..." : "Sign Up"}
-                </button>
-            </form>
-        </div>
-    );
+            {serverError && <p className="text-sm text-red-500">{serverError}</p>}
+            
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? "Creating account..." : "Sign up"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }
