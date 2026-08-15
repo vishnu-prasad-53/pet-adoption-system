@@ -1,4 +1,4 @@
-import { integer, pgEnum, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { integer, pgEnum, pgTable, serial, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 import { users } from "./auth.js";
 
@@ -6,7 +6,7 @@ export const shelterVerificationEnum = pgEnum("shelter_verification_status", ["p
 export const shelterStaffRoleEnum = pgEnum("shelter_staff_role", ["owner", "manager", "staff"]);
 
 export const shelters = pgTable("shelters", {
-    id: serial("id").primaryKey(),
+    id: uuid("id").primaryKey().defaultRandom(),
     name: text("name").notNull(),
     description: text("description"),
     phone: text("phone"),
