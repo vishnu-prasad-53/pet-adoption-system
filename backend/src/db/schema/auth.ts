@@ -1,9 +1,9 @@
-import { pgEnum, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, uuid, text, timestamp } from "drizzle-orm/pg-core";
 
 export const roleEnum = pgEnum("role", ["adopter", "shelter_staff", "admin"]);
 
 export const users = pgTable("users", {
-    id: serial("id").primaryKey(),
+    id: uuid("id").primaryKey(),
     name: text("name").notNull(),
     email: text("email").notNull().unique(),
     password: text("password").notNull(),

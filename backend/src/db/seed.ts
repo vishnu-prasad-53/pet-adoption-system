@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "./index.js";
-import { species, breeds, petTags, petTagMap, pets, petImages, shelters, users } from "./schema/index.js";
+import { species, breeds, petTags, petTagMap, pets, petImages, shelters, shelterStaff, users } from "./schema/index.js";
 
 async function seed() {
     const [dog] = await db.insert(species).values({ name: "Dog" }).returning();
@@ -21,11 +21,19 @@ async function seed() {
 
     const [shelter] = await db.insert(shelters).values({
         name: "Happy Paws Shelter",
+        slug: "sunny-acres-rescue",
         description: "A shelter for rescued animals",
         email: "happypaws@example.com",
         address: "Mumbai, Maharashtra",
         verificationStatus: "verified",
     }).returning();
+
+    await db.insert(shelterStaff).values({
+        shelterId: shelter.id,
+        userId: testUser.id,
+        staffRole: "owner",
+        joinedAt: new Date(),
+    });
 
     const [buddy] = await db.insert(pets).values({
         shelterId: shelter.id,
