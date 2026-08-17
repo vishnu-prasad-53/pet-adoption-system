@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { requireAuth, requireShelterStaff } from "../middleware/auth.middleware";
-import * as petsController from "../controllers/pets.controller";
+import { requireAuth, requireShelterStaff } from "../middleware/auth.middleware.js";
+import * as petsController from "../controllers/pets.controller.js";
 
 const router = Router();
 router.use(requireAuth, requireShelterStaff);
