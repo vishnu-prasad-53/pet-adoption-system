@@ -10,11 +10,14 @@ export async function apiFetch<T>(path: string, options: RequestInit = {}): Prom
         },
     });
 
-    const data = await response.json();
+    if (response.status === 204) {
+        if (!response.ok) throw new Error("Something went wrong");
+        return undefined as T;
+    }
 
+    const data = await response.json();
     if (!response.ok) {
         throw new Error(data.error || "Something went wrong");
     }
-
     return data;
 }
