@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import { usePets, useDeletePet, useUpdatePetStatus, type Pet } from "../../hooks/usePets";
 import { Button } from "../../components/ui/button";
 
@@ -43,6 +44,9 @@ export function PetTable() {
                                     <option key={s} value={s}>{s.replace("_", " ")}</option>
                                 ))}
                             </select>
+                        </td>
+                        <td className="p-2 font-medium">
+                            <Link to={`/shelter/pets/${pet.id}/edit`} className="hover:underline">{pet.name}</Link>
                         </td>
                         <td className="p-2 text-right">
                             <Button

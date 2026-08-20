@@ -2,6 +2,7 @@ import { eq, and } from "drizzle-orm";
 import { db } from "../db/index.js";
 import { pets } from "../db/schema/index.js";
 import type { CreatePetInput, UpdatePetInput } from "../schemas/pets.schema.js";
+import { petImages } from "../db/schema/index.js";
 
 export async function listPetsForShelter(shelterId: string) {
     return db.select().from(pets).where(eq(pets.shelterId, shelterId));
@@ -9,7 +10,9 @@ export async function listPetsForShelter(shelterId: string) {
 
 export async function getPetById(shelterId: string, petId: string) {
     const [pet] = await db.select().from(pets).where(and(eq(pets.id, petId), eq(pets.shelterId, shelterId)));
-    return pet ?? null;
+    if (!pet) return null;
+    const images = await db.select().from(petImages).where(eq(petImages.petId, petId));
+    return { ...pet, images };
 }
 
 export async function createPet(shelterId: string, input: CreatePetInput) {

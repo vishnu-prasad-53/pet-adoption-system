@@ -27,12 +27,56 @@ export type Pet = {
     updatedAt: string;
 };
 
+export type PetImage = { id: string; petId: string; url: string; createdAt: string };
+export type PetWithImages = Pet & { images: PetImage[] };
+
+export type PetInput = {
+    name: string;
+    speciesId: string;
+    breedId?: string;
+    ageYears?: number;
+    ageMonths?: number;
+    gender: "male" | "female";
+    size?: "small" | "medium" | "large" | "xlarge";
+    weightLbs?: number;
+    color?: string;
+    vaccinated: boolean;
+    houseTrained: boolean;
+    goodWithKids: boolean;
+    goodWithDogs: boolean;
+    goodWithCats: boolean;
+    energyLevel?: "low" | "medium" | "high";
+    description?: string;
+    adoptionFee?: number;
+};
+
 const PETS_KEY = ["shelter-pets"];
 
 export function usePets() {
     return useQuery({
         queryKey: PETS_KEY,
         queryFn: () => apiFetch<Pet[]>("/api/shelter/pets"),
+    });
+}
+
+export function useCreatePet() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (input: PetInput) =>
+            apiFetch<Pet>("/api/shelter/pets", { method: "POST", body: JSON.stringify(input) }),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: PETS_KEY }),
+    });
+}
+
+export function useUpdatePet() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({ petId, input }: { petId: string; input: PetInput }) =>
+            apiFetch<Pet>(`/api/shelter/pets/${petId}`, { method: "PATCH", body: JSON.stringify(input) }),
+        onSuccess: (_data, { petId }) => {
+            queryClient.invalidateQueries({ queryKey: PETS_KEY });
+            queryClient.invalidateQueries({ queryKey: ["pet", petId] });
+        },
     });
 }
 
