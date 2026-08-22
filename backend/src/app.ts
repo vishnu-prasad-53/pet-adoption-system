@@ -7,6 +7,7 @@ import { requireAuth, requireRole } from "./middleware/auth.middleware.js";
 import petsRouter from "./routes/pets.routes.js";
 import uploadsRouter from "./routes/uploads.routes.js";
 import catalogRouter from "./routes/catalog.routes.js";
+import publicPetsRouter from "./routes/public-pets.routes.js";
 
 const app = express();
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
@@ -17,6 +18,7 @@ app.use("/api/shelter/pets", petsRouter);
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 app.use("/api/shelter/uploads", uploadsRouter);
 app.use("/api/catalog", catalogRouter);
+app.use("/api/pets", publicPetsRouter);
 
 app.get("/", (_req, res) => {
     res.status(200).json({ success: true, message: "Pet Adoption API running" });
