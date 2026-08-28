@@ -3,20 +3,22 @@ import App from "./App";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
-import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import Browse from "./pages/Browse";
 import PetsList from "./pages/shelter/PetsList";
 import PetForm from "./pages/shelter/PetForm";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
+      { index: true, element: <Browse /> },
       { path: "login", element: <Login /> },
       { path: "signup", element: <Signup /> },
       {
         element: <ProtectedRoute />,
-        children: [{ index: true, element: <Dashboard /> }],
+        children: [{ path: "dashboard", element: <Dashboard /> }],
       },
       {
         element: <ProtectedRoute allowedRoles={["shelter_staff"]} />,
