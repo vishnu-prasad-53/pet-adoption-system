@@ -7,6 +7,7 @@ import Browse from "./pages/Browse";
 import PetsList from "./pages/shelter/PetsList";
 import PetForm from "./pages/shelter/PetForm";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import PetDetail from "./pages/PetDetail";
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ export const router = createBrowserRouter([
         element: <ProtectedRoute />,
         children: [{ path: "dashboard", element: <Dashboard /> }],
       },
+      { path: "pets/:id", element: <PetDetail /> },
       {
         element: <ProtectedRoute allowedRoles={["shelter_staff"]} />,
         children: [
