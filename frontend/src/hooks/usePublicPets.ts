@@ -29,6 +29,9 @@ export type PetSearchParams = {
     goodWithCats?: boolean;
     search?: string;
     page?: number;
+    lat?: number;
+    lng?: number;
+    radiusKm?: number;
 };
 
 type PublicPetsResponse = {

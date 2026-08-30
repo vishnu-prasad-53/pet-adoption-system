@@ -3,6 +3,7 @@ import { db } from "../db/index.js";
 import { pets } from "../db/schema/index.js";
 import type { CreatePetInput, UpdatePetInput } from "../schemas/pets.schema.js";
 import { petImages } from "../db/schema/index.js";
+import { findShelterIdsNearby } from "./shelters.service.js";
 
 export type PetSearchFilters = {
     speciesId?: string;
@@ -18,6 +19,9 @@ export type PetSearchFilters = {
     search?: string;
     page?: number;
     limit?: number;
+    lat?: number;
+    lng?: number;
+    radiusKm?: number;
 };
 
 export async function listPetsForShelter(shelterId: string) {
@@ -78,6 +82,13 @@ export async function searchPublicPets(filters: PetSearchFilters) {
     if (filters.minAge !== undefined) conditions.push(gte(pets.ageYears, filters.minAge));
     if (filters.maxAge !== undefined) conditions.push(lte(pets.ageYears, filters.maxAge));
     if (filters.search) conditions.push(ilike(pets.name, `%${filters.search}%`));
+    if (filters.lat !== undefined && filters.lng !== undefined && filters.radiusKm !== undefined) {
+        const nearbyShelterIds = await findShelterIdsNearby(filters.lat, filters.lng, filters.radiusKm);
+        if (nearbyShelterIds.length === 0) {
+            return { items: [], pagination: { page, limit, total: 0, totalPages: 0 } };
+        }
+        conditions.push(inArray(pets.shelterId, nearbyShelterIds));
+    }
 
     const where = and(...conditions);
 

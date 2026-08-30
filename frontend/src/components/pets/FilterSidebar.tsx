@@ -10,8 +10,11 @@ type FilterSidebarProps = {
         goodWithDogs?: boolean;
         goodWithCats?: boolean;
         search?: string;
+        lat?: number;
+        lng?: number;
+        radiusKm?: number;
     };
-    onChange: (key: string, value: string | boolean | undefined) => void;
+    onChange: (key: string, value: string | boolean | number | undefined) => void;
 };
 
 export function FilterSidebar({ params, onChange }: FilterSidebarProps) {
@@ -82,6 +85,40 @@ export function FilterSidebar({ params, onChange }: FilterSidebarProps) {
                     <input type="checkbox" checked={!!params.goodWithCats} onChange={(e) => onChange("goodWithCats", e.target.checked)} />
                     Good with cats
                 </label>
+            </div>
+
+            <div className="space-y-2 pt-2 border-t">
+                <button
+                    type="button"
+                    onClick={() => {
+                        if (!navigator.geolocation) {
+                            alert("Geolocation isn't supported in this browser");
+                            return;
+                        }
+                        navigator.geolocation.getCurrentPosition(
+                            (position) => {
+                                onChange("lat", position.coords.latitude);
+                                onChange("lng", position.coords.longitude);
+                                onChange("radiusKm", 50);
+                            },
+                            () => alert("Couldn't get your location — check browser permissions")
+                        );
+                    }}
+                    className="w-full h-8 rounded-lg border text-sm hover:bg-muted"
+                >
+                    Near Me
+                </button>
+                {params.lat !== undefined && (
+                    <select
+                        value={params.radiusKm ?? 50}
+                        onChange={(e) => onChange("radiusKm", Number(e.target.value))}
+                        className={selectClass}
+                    >
+                        <option value={10}>Within 10 km</option>
+                        <option value={50}>Within 50 km</option>
+                        <option value={100}>Within 100 km</option>
+                    </select>
+                )}
             </div>
         </aside>
     );

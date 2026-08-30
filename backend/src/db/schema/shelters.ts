@@ -1,4 +1,4 @@
-import { pgEnum, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, text, timestamp, uuid, doublePrecision } from "drizzle-orm/pg-core";
 
 import { users } from "./auth.js";
 
@@ -17,6 +17,8 @@ export const shelters = pgTable("shelters", {
     verificationStatus: shelterVerificationEnum("verification_status").notNull().default("pending"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    lat: doublePrecision("lat"),
+    lng: doublePrecision("lng"),
 });
 
 export const shelterStaff = pgTable("shelter_staff", {
