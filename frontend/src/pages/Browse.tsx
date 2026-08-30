@@ -16,11 +16,14 @@ export default function Browse() {
         goodWithCats: searchParams.get("goodWithCats") === "true",
         search: searchParams.get("search") ?? undefined,
         page: searchParams.get("page") ? Number(searchParams.get("page")) : 1,
+        lat: searchParams.get("lat") ? Number(searchParams.get("lat")) : undefined,
+        lng: searchParams.get("lng") ? Number(searchParams.get("lng")) : undefined,
+        radiusKm: searchParams.get("radiusKm") ? Number(searchParams.get("radiusKm")) : undefined,
     };
 
     const { data, isLoading, isError } = usePublicPets(params);
 
-    const updateFilter = (key: string, value: string | boolean | undefined) => {
+    const updateFilter = (key: string, value: string | number | boolean | undefined) => {
         const next = new URLSearchParams(searchParams);
         if (value === undefined || value === "" || value === false) {
             next.delete(key);

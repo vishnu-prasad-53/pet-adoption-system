@@ -20,6 +20,9 @@ const searchQuerySchema = z.object({
     search: z.string().optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().max(50).optional(),
+    lat: z.coerce.number().optional(),
+    lng: z.coerce.number().optional(),
+    radiusKm: z.coerce.number().positive().optional(),
 });
 
 router.get("/", async (req, res) => {

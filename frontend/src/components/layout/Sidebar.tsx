@@ -6,6 +6,7 @@ export function Sidebar({ role }: { role: string }) {
       {role === "shelter_staff" && (
         <nav className="flex flex-col gap-2 text-sm">
           <Link to="/shelter/pets">My Pets</Link>
+          <Link to="/shelter/settings">Settings</Link>
         </nav>
       )}
       {role === "admin" && <nav className="flex flex-col gap-2 text-sm" />}

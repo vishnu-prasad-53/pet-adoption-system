@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import Browse from "./pages/Browse";
 import PetsList from "./pages/shelter/PetsList";
 import PetForm from "./pages/shelter/PetForm";
+import Settings from "./pages/shelter/Settings";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import PetDetail from "./pages/PetDetail";
 
@@ -28,6 +29,7 @@ export const router = createBrowserRouter([
           { path: "shelter/pets", element: <PetsList /> },
           { path: "shelter/pets/new", element: <PetForm /> },
           { path: "shelter/pets/:id/edit", element: <PetForm /> },
+          { path: "shelter/settings", element: <Settings /> },
         ],
       },
     ],
