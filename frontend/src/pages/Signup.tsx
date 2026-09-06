@@ -2,14 +2,13 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useNavigate } from "react-router";
 import { authClient } from "../lib/auth-client";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Field, FieldLabel, FieldError } from "../components/ui/field";
-import { useNavigate } from "react-router";
 
-const navigate = useNavigate();
 
 const signupSchema = z.object({
   name: z.string().min(2, "Name is too short"),
@@ -19,11 +18,11 @@ const signupSchema = z.object({
 type SignupForm = z.infer<typeof signupSchema>;
 
 export default function Signup() {
+  const navigate = useNavigate();
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  const { register, handleSubmit, formState: { errors } } = useForm<SignupForm>({ 
-    resolver: zodResolver(signupSchema) 
+  const { register, handleSubmit, formState: { errors } } = useForm<SignupForm>({
+    resolver: zodResolver(signupSchema)
   });
 
   const onSubmit = async (values: SignupForm) => {
@@ -31,9 +30,9 @@ export default function Signup() {
     await authClient.signUp.email(values, {
       onRequest: () => setIsSubmitting(true),
       onSuccess: () => {
-  setIsSubmitting(false);
-  navigate("/");
-},
+        setIsSubmitting(false);
+        navigate("/");
+      },
       onError: (ctx) => {
         setIsSubmitting(false);
         setServerError(ctx.error.message);
@@ -47,7 +46,7 @@ export default function Signup() {
         <CardHeader><CardTitle>Create an account</CardTitle></CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            
+
             {/* Name Field */}
             <Field data-invalid={!!errors.name}>
               <FieldLabel>Name</FieldLabel>
@@ -70,7 +69,7 @@ export default function Signup() {
             </Field>
 
             {serverError && <p className="text-sm text-red-500">{serverError}</p>}
-            
+
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? "Creating account..." : "Sign up"}
             </Button>

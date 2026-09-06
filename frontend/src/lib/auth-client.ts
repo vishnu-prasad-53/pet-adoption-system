@@ -11,6 +11,7 @@ export const authClient = createAuthClient({
             user: {
                 role: {
                     type: "string",
+                    input: false,
                 },
             },
         }),

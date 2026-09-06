@@ -2,14 +2,13 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useNavigate } from "react-router";
 import { authClient } from "../lib/auth-client";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Field, FieldLabel, FieldError } from "../components/ui/field";
-import { useNavigate } from "react-router";
 
-const navigate = useNavigate();
 
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -18,12 +17,11 @@ const loginSchema = z.object({
 type LoginForm = z.infer<typeof loginSchema>;
 
 export default function Login() {
+  const navigate = useNavigate();
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // Destructure register, handleSubmit, and errors directly
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({ 
-    resolver: zodResolver(loginSchema) 
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
+    resolver: zodResolver(loginSchema)
   });
 
   const onSubmit = async (values: LoginForm) => {
@@ -31,9 +29,9 @@ export default function Login() {
     await authClient.signIn.email(values, {
       onRequest: () => setIsSubmitting(true),
       onSuccess: () => {
-  setIsSubmitting(false);
-  navigate("/");
-},
+        setIsSubmitting(false);
+        navigate("/");
+      },
       onError: (ctx) => {
         setIsSubmitting(false);
         setServerError(ctx.error.message);
@@ -48,7 +46,7 @@ export default function Login() {
         <CardContent>
           {/* Native HTML form element with standard handleSubmit handler */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            
+
             {/* Email Field */}
             <Field data-invalid={!!errors.email}>
               <FieldLabel>Email</FieldLabel>
@@ -64,7 +62,7 @@ export default function Login() {
             </Field>
 
             {serverError && <p className="text-sm text-red-500">{serverError}</p>}
-            
+
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? "Logging in..." : "Log in"}
             </Button>

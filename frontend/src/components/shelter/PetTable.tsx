@@ -28,8 +28,11 @@ export function PetTable() {
             </thead>
             <tbody>
                 {pets.map((pet) => (
+
                     <tr key={pet.id} className="border-b">
-                        <td className="p-2 font-medium">{pet.name}</td>
+                        <td className="p-2 font-medium">
+                            <Link to={`/shelter/pets/${pet.id}/edit`} className="hover:underline">{pet.name}</Link>
+                        </td>
                         <td className="p-2 capitalize">{pet.gender}</td>
                         <td className="p-2">{pet.ageYears ?? "?"}y {pet.ageMonths ?? 0}m</td>
                         <td className="p-2">
@@ -44,9 +47,6 @@ export function PetTable() {
                                     <option key={s} value={s}>{s.replace("_", " ")}</option>
                                 ))}
                             </select>
-                        </td>
-                        <td className="p-2 font-medium">
-                            <Link to={`/shelter/pets/${pet.id}/edit`} className="hover:underline">{pet.name}</Link>
                         </td>
                         <td className="p-2 text-right">
                             <Button
