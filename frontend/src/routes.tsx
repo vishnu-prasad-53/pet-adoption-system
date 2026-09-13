@@ -9,6 +9,7 @@ import PetForm from "./pages/shelter/PetForm";
 import Settings from "./pages/shelter/Settings";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import PetDetail from "./pages/PetDetail";
+import ApplyForm from "./pages/ApplyForm";
 
 export const router = createBrowserRouter([
   {
@@ -20,7 +21,10 @@ export const router = createBrowserRouter([
       { path: "signup", element: <Signup /> },
       {
         element: <ProtectedRoute />,
-        children: [{ path: "dashboard", element: <Dashboard /> }],
+        children: [
+          { path: "dashboard", element: <Dashboard /> },
+          { path: "pets/:id/apply", element: <ApplyForm /> },
+        ],
       },
       { path: "pets/:id", element: <PetDetail /> },
       {

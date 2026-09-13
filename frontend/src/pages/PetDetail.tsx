@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router";
+import { useParams, Link, useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../lib/api";
 import { useSpecies, useBreeds } from "../hooks/useCatalog";
@@ -33,6 +33,7 @@ type ShelterInfo = { id: string; name: string; phone: string | null; email: stri
 
 export default function PetDetail() {
     const { id } = useParams();
+    const navigate = useNavigate();
 
     const { data: pet, isLoading, error } = useQuery({
         queryKey: ["public-pet", id],
@@ -100,7 +101,7 @@ export default function PetDetail() {
                 </div>
             )}
 
-            <Button size="lg" disabled title="Coming in Day 17">Apply to Adopt</Button>
+            <Button size="lg" onClick={() => navigate(`/pets/${pet.id}/apply`)}>Apply to Adopt</Button>
         </div>
     );
 }
