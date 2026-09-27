@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../lib/api";
 
 export type ApplicationFormData = {
@@ -27,9 +27,21 @@ export type Application = {
     reviewedAt: string | null;
 };
 
+export type ApplicationWithPet = Application & {
+    petName: string;
+    petThumbnailUrl: string | null;
+};
+
 export function useCreateApplication() {
     return useMutation({
         mutationFn: (input: { petId: string; formData: ApplicationFormData }) =>
             apiFetch<Application>("/api/applications", { method: "POST", body: JSON.stringify(input) }),
+    });
+}
+
+export function useMyApplications() {
+    return useQuery({
+        queryKey: ["my-applications"],
+        queryFn: () => apiFetch<ApplicationWithPet[]>("/api/applications/mine"),
     });
 }

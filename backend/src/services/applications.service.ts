@@ -1,6 +1,6 @@
-import { eq, and } from "drizzle-orm";
+import { eq, and, inArray } from "drizzle-orm";
 import { db } from "../db/index.js";
-import { adoptionApplications, pets } from "../db/schema/index.js";
+import { adoptionApplications, pets, petImages } from "../db/schema/index.js";
 import type { CreateApplicationInput, UpdateApplicationStatusInput } from "../schemas/applications.schema.js";
 
 export class ApplicationError extends Error {
@@ -25,7 +25,30 @@ export async function createApplication(applicantId: string, input: CreateApplic
 }
 
 export async function listApplicationsForApplicant(applicantId: string) {
-    return db.select().from(adoptionApplications).where(eq(adoptionApplications.applicantId, applicantId));
+    const applications = await db.select({
+        id: adoptionApplications.id,
+        petId: adoptionApplications.petId,
+        applicantId: adoptionApplications.applicantId,
+        shelterId: adoptionApplications.shelterId,
+        status: adoptionApplications.status,
+        formData: adoptionApplications.formData,
+        decisionNotes: adoptionApplications.decisionNotes,
+        submittedAt: adoptionApplications.submittedAt,
+        reviewedAt: adoptionApplications.reviewedAt,
+        petName: pets.name,
+    })
+        .from(adoptionApplications)
+        .innerJoin(pets, eq(adoptionApplications.petId, pets.id))
+        .where(eq(adoptionApplications.applicantId, applicantId));
+
+    const petIds = applications.map((a) => a.petId);
+    const images = petIds.length > 0 ? await db.select().from(petImages).where(inArray(petImages.petId, petIds)) : [];
+    const firstImageByPetId = new Map<string, string>();
+    for (const img of images) {
+        if (!firstImageByPetId.has(img.petId)) firstImageByPetId.set(img.petId, img.url);
+    }
+
+    return applications.map((app) => ({ ...app, petThumbnailUrl: firstImageByPetId.get(app.petId) ?? null }));
 }
 
 export async function getApplicationForApplicant(applicationId: string, applicantId: string) {

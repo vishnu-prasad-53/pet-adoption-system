@@ -10,6 +10,7 @@ import Settings from "./pages/shelter/Settings";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import PetDetail from "./pages/PetDetail";
 import ApplyForm from "./pages/ApplyForm";
+import MyApplications from "./pages/MyApplications";
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +25,7 @@ export const router = createBrowserRouter([
         children: [
           { path: "dashboard", element: <Dashboard /> },
           { path: "pets/:id/apply", element: <ApplyForm /> },
+          { path: "applications/mine", element: <MyApplications /> },
         ],
       },
       { path: "pets/:id", element: <PetDetail /> },
