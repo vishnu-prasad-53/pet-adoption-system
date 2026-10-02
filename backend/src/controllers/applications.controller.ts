@@ -16,7 +16,7 @@ export async function createApplication(req: Request, res: Response) {
         res.status(201).json(application);
     } catch (err) {
         if (err instanceof ApplicationError) return res.status(err.statusCode).json({ error: err.message });
-        throw err; 
+        throw err;
     }
 }
 
@@ -50,9 +50,13 @@ export async function updateApplicationStatus(req: Request<ApplicationParams>, r
     const parsed = updateApplicationStatusSchema.safeParse(req.body);
     if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
 
-    const application = await applicationsService.updateApplicationStatus(
-        req.params.id, req.shelterId!, req.user!.id, parsed.data
-    );
-    if (!application) return res.status(404).json({ error: "Application not found" });
-    res.json(application);
+    try {
+        const application = await applicationsService.updateApplicationStatus(
+            req.params.id, req.shelterId!, req.user!.id, parsed.data
+        );
+        res.json(application);
+    } catch (err) {
+        if (err instanceof ApplicationError) return res.status(err.statusCode).json({ error: err.message });
+        throw err;
+    }
 }

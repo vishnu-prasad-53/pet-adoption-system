@@ -1,6 +1,6 @@
 import { eq, and, inArray } from "drizzle-orm";
 import { db } from "../db/index.js";
-import { adoptionApplications, pets, petImages } from "../db/schema/index.js";
+import { adoptionApplications, pets, petImages, users } from "../db/schema/index.js";
 import type { CreateApplicationInput, UpdateApplicationStatusInput } from "../schemas/applications.schema.js";
 
 export class ApplicationError extends Error {
@@ -66,11 +66,44 @@ export async function withdrawApplication(applicationId: string, applicantId: st
 }
 
 export async function listApplicationsForShelter(shelterId: string) {
-    return db.select().from(adoptionApplications).where(eq(adoptionApplications.shelterId, shelterId));
+    return db.select({
+        id: adoptionApplications.id,
+        petId: adoptionApplications.petId,
+        applicantId: adoptionApplications.applicantId,
+        shelterId: adoptionApplications.shelterId,
+        status: adoptionApplications.status,
+        formData: adoptionApplications.formData,
+        decisionNotes: adoptionApplications.decisionNotes,
+        submittedAt: adoptionApplications.submittedAt,
+        reviewedAt: adoptionApplications.reviewedAt,
+        petName: pets.name,
+        applicantName: users.name,
+        applicantEmail: users.email,
+    })
+        .from(adoptionApplications)
+        .innerJoin(pets, eq(adoptionApplications.petId, pets.id))
+        .innerJoin(users, eq(adoptionApplications.applicantId, users.id))
+        .where(eq(adoptionApplications.shelterId, shelterId));
 }
 
 export async function getApplicationForShelter(applicationId: string, shelterId: string) {
-    const [application] = await db.select().from(adoptionApplications)
+    const [application] = await db.select({
+        id: adoptionApplications.id,
+        petId: adoptionApplications.petId,
+        applicantId: adoptionApplications.applicantId,
+        shelterId: adoptionApplications.shelterId,
+        status: adoptionApplications.status,
+        formData: adoptionApplications.formData,
+        decisionNotes: adoptionApplications.decisionNotes,
+        submittedAt: adoptionApplications.submittedAt,
+        reviewedAt: adoptionApplications.reviewedAt,
+        petName: pets.name,
+        applicantName: users.name,
+        applicantEmail: users.email,
+    })
+        .from(adoptionApplications)
+        .innerJoin(pets, eq(adoptionApplications.petId, pets.id))
+        .innerJoin(users, eq(adoptionApplications.applicantId, users.id))
         .where(and(eq(adoptionApplications.id, applicationId), eq(adoptionApplications.shelterId, shelterId)));
     return application ?? null;
 }
@@ -81,9 +114,22 @@ export async function updateApplicationStatus(
     reviewerId: string,
     input: UpdateApplicationStatusInput
 ) {
-    const [application] = await db.update(adoptionApplications)
-        .set({ ...input, reviewedBy: reviewerId, reviewedAt: new Date() })
-        .where(and(eq(adoptionApplications.id, applicationId), eq(adoptionApplications.shelterId, shelterId)))
-        .returning();
-    return application ?? null;
+    return db.transaction(async (tx) => {
+        const [application] = await tx.update(adoptionApplications)
+            .set({ ...input, reviewedBy: reviewerId, reviewedAt: new Date() })
+            .where(and(eq(adoptionApplications.id, applicationId), eq(adoptionApplications.shelterId, shelterId)))
+            .returning();
+
+        if (!application) {
+            throw new ApplicationError("Application not found", 404);
+        }
+
+        if (input.status === "approved") {
+            await tx.update(pets)
+                .set({ status: "pending", updatedAt: new Date() })
+                .where(eq(pets.id, application.petId));
+        }
+
+        return application;
+    });
 }

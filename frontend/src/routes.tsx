@@ -11,6 +11,8 @@ import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import PetDetail from "./pages/PetDetail";
 import ApplyForm from "./pages/ApplyForm";
 import MyApplications from "./pages/MyApplications";
+import Applications from "./pages/shelter/Applications";
+import { ReviewPanel } from "./components/applications/ReviewPanel";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +38,8 @@ export const router = createBrowserRouter([
           { path: "shelter/pets/new", element: <PetForm /> },
           { path: "shelter/pets/:id/edit", element: <PetForm /> },
           { path: "shelter/settings", element: <Settings /> },
+          { path: "shelter/applications", element: <Applications /> },
+          { path: "shelter/applications/:id", element: <ReviewPanel /> },
         ],
       },
     ],
