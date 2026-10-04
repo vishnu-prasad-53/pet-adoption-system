@@ -12,6 +12,7 @@ export function Navbar() {
       <nav className="flex items-center gap-4">
         {session?.user ? (
           <>
+            <Link to="/favorites" className="text-sm">Favorites</Link>
             <Link to="/applications/mine" className="text-sm">My Applications</Link>
             <span className="text-sm text-muted-foreground">{session.user.email}</span>
             <Button variant="outline" size="sm" onClick={() => authClient.signOut()}>Log out</Button>

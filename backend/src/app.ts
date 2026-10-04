@@ -12,6 +12,7 @@ import publicSheltersRouter from "./routes/public-shelters.routes.js";
 import shelterSettingsRouter from "./routes/shelters.routes.js";
 import applicationsRouter from "./routes/applications.routes.js";
 import shelterApplicationsRouter from "./routes/shelter-applications.routes.js";
+import favoritesRouter from "./routes/favorites.routes.js";
 
 const app = express();
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
@@ -27,6 +28,7 @@ app.use("/api/shelters", publicSheltersRouter);
 app.use("/api/shelter/settings", shelterSettingsRouter);
 app.use("/api/applications", applicationsRouter);
 app.use("/api/shelter/applications", shelterApplicationsRouter);
+app.use("/api/favorites", favoritesRouter);
 
 app.get("/", (_req, res) => {
     res.status(200).json({ success: true, message: "Pet Adoption API running" });

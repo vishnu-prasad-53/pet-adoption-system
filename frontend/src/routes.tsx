@@ -13,6 +13,7 @@ import ApplyForm from "./pages/ApplyForm";
 import MyApplications from "./pages/MyApplications";
 import Applications from "./pages/shelter/Applications";
 import { ReviewPanel } from "./components/applications/ReviewPanel";
+import MyFavorites from "./pages/MyFavorites";
 
 export const router = createBrowserRouter([
   {
@@ -28,6 +29,7 @@ export const router = createBrowserRouter([
           { path: "dashboard", element: <Dashboard /> },
           { path: "pets/:id/apply", element: <ApplyForm /> },
           { path: "applications/mine", element: <MyApplications /> },
+          { path: "favorites", element: <MyFavorites /> },
         ],
       },
       { path: "pets/:id", element: <PetDetail /> },
