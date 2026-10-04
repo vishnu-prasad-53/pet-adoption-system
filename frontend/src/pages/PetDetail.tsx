@@ -1,9 +1,11 @@
-import { useParams, Link } from "react-router";
+import { useParams, Link, useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../lib/api";
 import { useSpecies, useBreeds } from "../hooks/useCatalog";
 import { Gallery } from "../components/pets/Gallery";
 import { Button } from "../components/ui/button";
+import { FavoriteButton } from "../components/pets/FavoriteButton";
+
 
 type PetImage = { id: string; petId: string; url: string; createdAt: string };
 type PetDetail = {
@@ -33,6 +35,7 @@ type ShelterInfo = { id: string; name: string; phone: string | null; email: stri
 
 export default function PetDetail() {
     const { id } = useParams();
+    const navigate = useNavigate();
 
     const { data: pet, isLoading, error } = useQuery({
         queryKey: ["public-pet", id],
@@ -67,6 +70,11 @@ export default function PetDetail() {
         <div className="max-w-3xl mx-auto space-y-6">
             <Gallery images={pet.images} petName={pet.name} />
 
+            <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-semibold">{pet.name}</h1>
+                <FavoriteButton petId={pet.id} />
+            </div>
+            
             <div className="space-y-2">
                 <h1 className="text-2xl font-semibold">{pet.name}</h1>
                 <p className="text-muted-foreground">
@@ -100,7 +108,7 @@ export default function PetDetail() {
                 </div>
             )}
 
-            <Button size="lg" disabled title="Coming in Day 17">Apply to Adopt</Button>
+            <Button size="lg" onClick={() => navigate(`/pets/${pet.id}/apply`)}>Apply to Adopt</Button>
         </div>
     );
 }

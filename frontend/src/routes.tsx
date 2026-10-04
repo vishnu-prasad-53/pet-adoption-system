@@ -9,6 +9,11 @@ import PetForm from "./pages/shelter/PetForm";
 import Settings from "./pages/shelter/Settings";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import PetDetail from "./pages/PetDetail";
+import ApplyForm from "./pages/ApplyForm";
+import MyApplications from "./pages/MyApplications";
+import Applications from "./pages/shelter/Applications";
+import { ReviewPanel } from "./components/applications/ReviewPanel";
+import MyFavorites from "./pages/MyFavorites";
 
 export const router = createBrowserRouter([
   {
@@ -20,7 +25,12 @@ export const router = createBrowserRouter([
       { path: "signup", element: <Signup /> },
       {
         element: <ProtectedRoute />,
-        children: [{ path: "dashboard", element: <Dashboard /> }],
+        children: [
+          { path: "dashboard", element: <Dashboard /> },
+          { path: "pets/:id/apply", element: <ApplyForm /> },
+          { path: "applications/mine", element: <MyApplications /> },
+          { path: "favorites", element: <MyFavorites /> },
+        ],
       },
       { path: "pets/:id", element: <PetDetail /> },
       {
@@ -30,6 +40,8 @@ export const router = createBrowserRouter([
           { path: "shelter/pets/new", element: <PetForm /> },
           { path: "shelter/pets/:id/edit", element: <PetForm /> },
           { path: "shelter/settings", element: <Settings /> },
+          { path: "shelter/applications", element: <Applications /> },
+          { path: "shelter/applications/:id", element: <ReviewPanel /> },
         ],
       },
     ],
