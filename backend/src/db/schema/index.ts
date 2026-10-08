@@ -4,3 +4,4 @@ export * from "./shelters.js";
 export * from "./pets.js"
 export * from "./applications.js";
 export * from "./favorites.js";
+export * from "./messaging.js";

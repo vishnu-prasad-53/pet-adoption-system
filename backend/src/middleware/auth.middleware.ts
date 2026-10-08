@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { fromNodeHeaders } from "better-auth/node";
 import { auth } from "../lib/auth.js";
-import { eq } from "drizzle-orm";
-import { db } from "../db/index.js";
-import { shelterStaff } from "../db/schema/index.js";
+import { getShelterIdForStaffUser } from "../services/shelters.service.js";
+
 
 export async function requireAuth(req: Request, res: Response, next: NextFunction) {
     const session = await auth.api.getSession({
@@ -30,13 +29,10 @@ export async function requireShelterStaff(req: Request, res: Response, next: Nex
     if (!req.user || req.user.role !== "shelter_staff") {
         return res.status(403).json({ error: "Forbidden" });
     }
-
-    const [staffRow] = await db.select().from(shelterStaff).where(eq(shelterStaff.userId, req.user.id)).limit(1);
-
-    if (!staffRow) {
+    const shelterId = await getShelterIdForStaffUser(req.user.id);
+    if (!shelterId) {
         return res.status(403).json({ error: "No shelter associated with this account" });
     }
-
-    req.shelterId = staffRow.shelterId;
+    req.shelterId = shelterId;
     next();
 }

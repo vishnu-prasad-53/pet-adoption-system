@@ -1,6 +1,6 @@
 import { eq, sql } from "drizzle-orm";
 import { db } from "../db/index.js";
-import { shelters } from "../db/schema/index.js";
+import { shelters, shelterStaff } from "../db/schema/index.js";
 import { geocodeAddress } from "../lib/geocoding.js";
 
 export async function getPublicShelterById(shelterId: string) {
@@ -49,4 +49,9 @@ export async function findShelterIdsNearby(lat: number, lng: number, radiusKm: n
     AND earth_distance(ll_to_earth(lat, lng), ll_to_earth(${lat}, ${lng})) <= ${radiusKm * 1000}
   `);
     return result.rows.map((row: any) => row.id);
+}
+
+export async function getShelterIdForStaffUser(userId: string): Promise<string | null> {
+    const [staffRow] = await db.select().from(shelterStaff).where(eq(shelterStaff.userId, userId)).limit(1);
+    return staffRow?.shelterId ?? null;
 }
